@@ -236,10 +236,12 @@ getblk(struct uvnode * vp, daddr_t lbn, int size)
 		else if (bp->b_bcount > size) {
 			assert(!(bp->b_flags & B_DELWRI));
 			bp->b_bcount = size;
+			assert(!(bp->b_flags & B_DONTFREE));
 			bp->b_data = erealloc(bp->b_data, size);
 			return bp;
 		}
 
+		assert(!(bp->b_flags & B_DELWRI));
 		buf_destroy(bp);
 		bp = NULL;
 	}
